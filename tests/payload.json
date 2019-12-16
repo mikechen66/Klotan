@@ -1,0 +1,86 @@
+{
+    "version": "1.0",
+    "status": "UP",
+    "comment": "All components are up and running",
+    "az": [
+        {
+            "name": "fr-paris-1",
+            "status": "UP",
+            "comment": ""
+        }
+    ],
+    "modules": [
+        {
+            "name": "celery",
+            "status": "UP",
+            "comment": "Celery is up",
+            "az": [
+                {
+                    "name": "fr-paris-1",
+                    "status": "UP",
+                    "comment": "Celery is up"
+                }
+            ]
+        },
+        {
+            "name": "database",
+            "status": "UP",
+            "comment": "The database is online",
+            "az": [
+                {
+                    "name": "fr-paris-1",
+                    "status": "UP",
+                    "comment": "The database is online"
+                }
+            ]
+        },
+        {
+            "name": "redis",
+            "status": "UP",
+            "comment": "Redis is up",
+            "az": [
+                {
+                    "name": "fr-paris-1",
+                    "status": "UP",
+                    "comment": "Redis is up"
+                }
+            ]
+        },
+        {
+            "name": "ansible_tower",
+            "status": "UP",
+            "comment": "Ansible Tower is up",
+            "az": [
+                {
+                    "name": "fr-paris-1",
+                    "status": "UP",
+                    "comment": "Ansible Tower is up"
+                }
+            ]
+        },
+        {
+            "name": "vault_aas",
+            "status": "UP",
+            "comment": "Vaultaas is up",
+            "az": [
+                {
+                    "name": "fr-paris-1",
+                    "status": "UP",
+                    "comment": "Vaultaas is up"
+                }
+            ]
+        },
+        {
+            "name": "iam_aas",
+            "status": "UP",
+            "comment": "Iamaas is up",
+            "az": [
+                {
+                    "name": "fr-paris-1",
+                    "status": "UP",
+                    "comment": "Iamaas is up"
+                }
+            ]
+        }
+    ]
+}
