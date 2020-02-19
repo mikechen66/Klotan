@@ -1,6 +1,7 @@
 from klotan.criteria import args_to_string, expected, is_type, equals
+from klotan.exceptions import ValidationError
 
-
+# TODO: Handle criteria exception
 class CriteriaResult:
     def __init__(self, criteria, *kargs, **kwargs):
         self.criteria = criteria
@@ -97,6 +98,10 @@ class MatchObjectDict:
         e += "\n" + " " * tab * tab_size + "}"
         return e
 
+    def raise_on_invalid_data(self):
+        if not self.is_valid():
+            raise ValidationError(self.to_string())
+
 
 class OptionalKey:
     def __init__(self, key):
@@ -114,6 +119,7 @@ class OptionalKey:
 
 def optional(key):
     return OptionalKey(key)
+
 
 def _select_match(key, template, value, match_object):
     if key is not None:
@@ -167,6 +173,8 @@ def match_list(template: list, array: list, match_object: MatchObjectList):
             elif isinstance(template_value, dict) and isinstance(value_array, dict):
                 if match_dict(template_value, value_array, match_object.add_dict()):
                     break
-            elif isinstance(template_value, (list, tuple)) and isinstance(value_array, (list, tuple)):
+            elif isinstance(template_value, (list, tuple)) and isinstance(
+                value_array, (list, tuple)
+            ):
                 if match_list(template_value, value_array, match_object.add_list()):
                     break
