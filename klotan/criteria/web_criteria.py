@@ -1,4 +1,6 @@
 import re
+import ipaddress
+
 
 from klotan.criteria.core import fn_to_criteria
 
@@ -10,9 +12,14 @@ EMAIL_REGEX = (
     r"""{3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08"""
     r"""\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])"""
 )
+
+
 @fn_to_criteria
 def is_email():
-    return lambda y: re.match(EMAIL_REGEX, y) is not None
+    return (
+        lambda y: isinstance(y, (str, bytes)) and re.match(EMAIL_REGEX, y) is not None
+    )
+
 
 URL_REGEX = (
     r"^(?:(?:https?|ftp)://)(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})"
@@ -23,6 +30,19 @@ URL_REGEX = (
     r"*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:/[^\s]*)?$"
 )
 
+
 @fn_to_criteria
 def is_url():
-    return lambda y: re.match(URL_REGEX, y) is not None
+    return lambda y: isinstance(y, (str, bytes)) and re.match(URL_REGEX, y) is not None
+
+
+@fn_to_criteria
+def is_ip():
+    def is_ip_wrapper(ip):
+        try:
+            ipaddress.ip_address(ip)
+            return True
+        except ValueError:
+            return False
+
+    return is_ip_wrapper
