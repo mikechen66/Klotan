@@ -199,12 +199,16 @@ def match_list_strict(template: list, array: list, match_object: MatchObjectList
     while i < len(template):
         template_value = template[i]
         if array_index >= len(array):
+            if i == len(template) - 1 and template[-1] == Ellipsis:
+                break
             match_object.add_criteria(equals(template_value), None)
             i += 1
             continue
         if isinstance(template_value, type(Ellipsis)):
-            sub_match = match(template[i + 1], array[array_index])
-            if not sub_match.is_valid():
+            sub_match = False
+            if i + 1 < len(template):
+                sub_match = match(template[i + 1], array[array_index])
+            if not sub_match or not sub_match.is_valid():
                 match_object.add_criteria(accept(), array[array_index])
                 i -= 1
                 array_index += 1
@@ -217,3 +221,5 @@ def match_list_strict(template: list, array: list, match_object: MatchObjectList
             if template_value == array[array_index]:
                 array_index += 1
         i += 1
+    for i in range(array_index, len(array)):
+        match_object.add_criteria(reject(), array[i])
