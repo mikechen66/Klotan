@@ -1,5 +1,15 @@
-from klotan.criteria import args_to_string, expected, is_type, equals
+from klotan.criteria import (
+    args_to_string,
+    expected,
+    is_type,
+    equals,
+    regex,
+    accept,
+    reject,
+)
 from klotan.exceptions import ValidationError
+from typing import Pattern
+import re
 
 # TODO: Handle criteria exception
 class CriteriaResult:
@@ -59,7 +69,7 @@ class MatchObjectList:
         return e
 
     def __repr__(self):
-        return self.to_string(self.tree, 0)
+        return self.to_string(0)
 
 
 class MatchObjectDict:
@@ -178,3 +188,32 @@ def match_list(template: list, array: list, match_object: MatchObjectList):
             ):
                 if match_list(template_value, value_array, match_object.add_list()):
                     break
+
+
+_ = accept()
+
+
+def match_list_strict(template: list, array: list, match_object: MatchObjectList):
+    array_index = 0
+    i = 0
+    while i < len(template):
+        template_value = template[i]
+        if array_index >= len(array):
+            match_object.add_criteria(equals(template_value), None)
+            i += 1
+            continue
+        if isinstance(template_value, type(Ellipsis)):
+            sub_match = match(template[i + 1], array[array_index])
+            if not sub_match.is_valid():
+                match_object.add_criteria(accept(), array[array_index])
+                i -= 1
+                array_index += 1
+        elif callable(template_value):
+            match_object.add_criteria(template_value, array[array_index])
+            if template_value(array[array_index]):
+                array_index += 1
+        else:
+            match_object.add_criteria(equals(template_value), array[array_index])
+            if template_value == array[array_index]:
+                array_index += 1
+        i += 1
