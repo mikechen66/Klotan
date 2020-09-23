@@ -27,7 +27,7 @@ setup(
         'Programming Language :: Python :: 3.7',
     ],
     keywords='matching json',
-    packages=find_packages(include=["klotan"]),
+    packages=find_packages(),
     install_requires=[
     ],
     extras_require={
