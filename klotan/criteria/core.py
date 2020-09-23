@@ -35,7 +35,10 @@ class Criteria:
     def __call__(self, *kargs, **kwargs):
         if self.ref:
             self.ref.store(self.fn, *kargs, **kwargs)
-        return self.fn(*kargs, **kwargs)
+        try:
+            return self.fn(*kargs, **kwargs)
+        except Exception as e:
+            return False
 
     def __repr__(self):
         model = f"{self.name}" if self.combined else f"Criteria<{self.name}>"
@@ -75,6 +78,7 @@ def fn_to_criteria(fn):
         return Criteria(fn.__name__, fn(*kargs, **kwargs), *kargs, **kwargs)
 
     return fn_to_criteria_wrapper
+
 
 @fn_to_criteria
 def expected(x, optional):
